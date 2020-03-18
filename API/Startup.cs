@@ -27,6 +27,13 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(opts =>
+            {
+                opts.AddPolicy("CorsPolicy", policy =>
+                  {
+                      policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "http://192.168.0.122:3000");
+                  });
+            });
             services.AddControllers();
             services.AddDbContext<DataContext>(opt =>
             {
@@ -48,6 +55,7 @@ namespace API
 
             app.UseAuthorization();
 
+            app.UseCors("CorsPolicy");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
